@@ -7,33 +7,48 @@ export class IpcService {
 
   // private ipc: IpcRenderer
 
-  constructor(private electron:ElectronService) {
+  constructor(private electron: ElectronService) {
     // if ((<any>window).require) {
-      // try {
-      //   this.ipc = (<any>window).require('electron').IpcRenderer;
-      // } catch (error) {
-      //   if (error) {
-      //     throw error;
-      //   }
-      //}
+    // try {
+    //   this.ipc = (<any>window).require('electron').IpcRenderer;
+    // } catch (error) {
+    //   if (error) {
+    //     throw error;
+    //   }
+    // }
     // } else {
     //   console.warn("Could not load electron ipc");
     // }
-    if(this.electron.isElectronApp) { 
-      console.log("ready to go");
+    if (this.electron.isElectronApp) {
+      console.log('ready to go');
     } else {
-      console.log("error");
+      console.log('error');
     }
   }
 
-  registerUser(data:any) {
-    return new Promise<any>((resolve,reject) => {
+  registerUser(data: any) {
+    return new Promise<any>((resolve, reject) => {
       console.log(this.electron);
-      this.electron.ipcRenderer.once("registerUserResponse",(event,arg) => {
+      this.electron.ipcRenderer.once('registerUserResponse', (event, arg) => {
         resolve(arg);
       });
-      this.electron.ipcRenderer.send("registerUser",data);
+      this.electron.ipcRenderer.send('registerUser', data);
     });
+  }
+
+  popupUser(data: any) {
+
+    // console.log('hii');
+    // console.log(this.electron);
+    this.electron.ipcRenderer.send('popupUser', data);
+    return new Promise<any>((resolve, reject) => {
+       // console.log(this.electron);
+      this.electron.ipcRenderer.once('popupUserResponse', (event, arg) => {
+        resolve(arg);
+      });
+
+    });
+
   }
 
 }

@@ -1,33 +1,53 @@
 "use strict";
-// Modules to control application life and create native browser window
+// // Modules to control application life and create native browser window
 Object.defineProperty(exports, "__esModule", { value: true });
 var electron_1 = require("electron");
 var mongoose = require('mongoose');
-// const path = require("path");
-// const url = require("url");
+var path = require('path');
+var url = require('url');
 var userModel = require('./models/user.model');
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+var userModel1 = require('./models/al.model');
+// // Keep a global reference of the window object, if you don't, the window will
+// // be closed automatically when the JavaScript object is garbage collected.
+// tslint:disable-next-line: one-variable-per-declaration
 var win, serve;
 var args = process.argv.slice(1);
 serve = args.some(function (val) { return val === '--serve'; });
 // connect to mongodb
-mongoose.connect("mongodb://localhost:27017/test", {
+mongoose.connect('mongodb://localhost:27017/test', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
 // ipc communication
-electron_1.ipcMain.on("registerUser", function (event, arg) {
+electron_1.ipcMain.on('registerUser', function (event, arg) {
     console.log(arg);
     var user = new userModel(arg);
     user.save(function (err, product) {
         if (err) {
-            win.webContents.send("registerUserResponse", {
+            win.webContents.send('registerUserResponse', {
                 error: err
             });
         }
         else {
-            win.webContents.send("registerUserResponse", {
+            win.webContents.send('registerUserResponse', {
+                status: 200
+            });
+        }
+    });
+});
+electron_1.ipcMain.on('popupUser', function (event, arg) {
+    console.log(arg);
+    console.log(typeof arg.Number);
+    var user = new userModel1(arg);
+    // tslint:disable-next-line: only-arrow-functions
+    user.save(function (err, product) {
+        if (err) {
+            win.webContents.send('popupUserResponse', {
+                error: err
+            });
+        }
+        else {
+            win.webContents.send('popupUserResponse', {
                 status: 200
             });
         }
@@ -44,13 +64,11 @@ function createWindow() {
         }
     });
     // and load the index.html of the app.
-    // win.loadURL(
-    //   url.format({
-    //     pathname: path.join(__dirname, `/dist/electron-poc/index.html`),
-    //     protocol: "file:",
-    //     slashes: true
-    //   })
-    // );
+    win.loadURL(url.format({
+        pathname: path.join(__dirname, "/dist/electron-poc/index.html"),
+        protocol: 'file:',
+        slashes: true
+    }));
     // and load the index.html of the app.
     if (serve) {
         require('electron-reload')(__dirname, {
@@ -62,7 +80,7 @@ function createWindow() {
         win.loadFile('./dist/electron-poc/index.html');
     }
     // Open the DevTools.
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
     // Emitted when the window is closed.
     win.on('closed', function () {
         // Dereference the window object, usually you would store windows
@@ -71,11 +89,11 @@ function createWindow() {
         win = null;
     });
 }
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+// // This method will be called when Electron has finished
+// // initialization and is ready to create browser windows.
+// // Some APIs can only be used after this event occurs.
 electron_1.app.on('ready', createWindow);
-// Quit when all windows are closed.
+// // Quit when all windows are closed.
 electron_1.app.on('window-all-closed', function () {
     // On macOS it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
@@ -91,5 +109,5 @@ electron_1.app.on('activate', function () {
     }
 });
 // In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+// code.You can also put them in separate files and require them here.
 //# sourceMappingURL=main.js.map
