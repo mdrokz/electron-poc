@@ -19,6 +19,7 @@ mongoose.connect('mongodb://localhost:27017/test', {
     useUnifiedTopology: true
 });
 // ipc communication
+// register page
 electron_1.ipcMain.on('registerUser', function (event, arg) {
     console.log(arg);
     var user = new userModel(arg);
@@ -37,7 +38,6 @@ electron_1.ipcMain.on('registerUser', function (event, arg) {
 });
 electron_1.ipcMain.on('popupUser', function (event, arg) {
     console.log(arg);
-    console.log(typeof arg.Number);
     var user = new userModel1(arg);
     // tslint:disable-next-line: only-arrow-functions
     user.save(function (err, product) {
@@ -51,6 +51,23 @@ electron_1.ipcMain.on('popupUser', function (event, arg) {
                 status: 200
             });
         }
+    });
+});
+// login verification
+electron_1.ipcMain.on('checkUser', function (event, arg) {
+    var user = new userModel(arg);
+    userModel.findOne({
+        email: user.email, password: user.password
+    }, function (err, res) {
+        if (res) {
+            // res.json({ message: 'User Found' });
+            console.log('user found');
+        }
+        else {
+            // res.json({ message: 'User Not Found' });
+            console.log('user not found');
+        }
+        console.log(err, res);
     });
 });
 function createWindow() {

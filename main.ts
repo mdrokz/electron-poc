@@ -28,11 +28,11 @@ mongoose.connect('mongodb://localhost:27017/test', {
 
 
 // ipc communication
-
+// register page
 ipcMain.on('registerUser', (event, arg) => {
    console.log(arg);
-   let user = new userModel(arg);
-   user.save(function (err, product) {
+   const user = new userModel(arg);
+   user.save(function(err, product) {
       if (err) {
          win.webContents.send('registerUserResponse', {
             error: err
@@ -48,10 +48,10 @@ ipcMain.on('registerUser', (event, arg) => {
 
 ipcMain.on('popupUser', (event, arg) => {
    console.log(arg);
-   console.log(typeof arg.Number)
-   let user = new userModel1(arg);
+
+   const user = new userModel1(arg);
    // tslint:disable-next-line: only-arrow-functions
-   user.save(function (err, product) {
+   user.save(function(err, product) {
       if (err) {
          win.webContents.send('popupUserResponse', {
             error: err
@@ -63,6 +63,25 @@ ipcMain.on('popupUser', (event, arg) => {
       }
    });
 
+});
+
+// login verification
+
+ipcMain.on('checkUser', (event, arg) => {
+   const user = new userModel(arg);
+
+   userModel.findOne({
+      email: user.email, password: user.password
+   }, (err, res) => {
+      if (res) {
+         // res.json({ message: 'User Found' });
+         console.log('user found');
+      } else {
+         // res.json({ message: 'User Not Found' });
+         console.log('user not found');
+      }
+      console.log(err, res);
+   });
 });
 
 
@@ -96,10 +115,10 @@ function createWindow() {
       win.loadFile('./dist/electron-poc/index.html');
    }
    // Open the DevTools.
-  // win.webContents.openDevTools();
+   // win.webContents.openDevTools();
 
    // Emitted when the window is closed.
-   win.on('closed', function () {
+   win.on('closed', function() {
       // Dereference the window object, usually you would store windows
       // in an array if your app supports multi windows, this is the time
       // when you should delete the corresponding element.
@@ -114,7 +133,7 @@ function createWindow() {
 app.on('ready', createWindow);
 
 // // Quit when all windows are closed.
-app.on('window-all-closed', function () {
+app.on('window-all-closed', function() {
    // On macOS it is common for applications and their menu bar
    // to stay active until the user quits explicitly with Cmd + Q
    if (process.platform !== 'darwin') {
@@ -122,7 +141,7 @@ app.on('window-all-closed', function () {
    }
 });
 
-app.on('activate', function () {
+app.on('activate', function() {
    // On macOS it's common to re-create a window in the app when the
    // dock icon is clicked and there are no other windows open.
    if (win === null) {

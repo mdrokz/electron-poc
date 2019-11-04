@@ -23,14 +23,6 @@ export class AboutComponent implements OnInit {
   ngOnInit() {
   }
 
-  testOpen() {
-    this.dialog.open(PopupComponent, {
-      height: '400px',
-      width: '600px',
-      data: { data: this.user }
-    });
-  }
-
   // testSend() {
   //   this.ipc.popupUser(this.user).then(res => {
   //     console.log(res);

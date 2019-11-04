@@ -42,13 +42,17 @@ export class IpcService {
     // console.log(this.electron);
     this.electron.ipcRenderer.send('popupUser', data);
     return new Promise<any>((resolve, reject) => {
-       // console.log(this.electron);
+      // console.log(this.electron);
       this.electron.ipcRenderer.once('popupUserResponse', (event, arg) => {
         resolve(arg);
       });
 
     });
 
+  }
+
+  checkUser(data: any) {
+    this.electron.ipcRenderer.send('checkUser', data);
   }
 
 }

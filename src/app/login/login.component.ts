@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IpcService } from '../services/ipc.service';
 
 @Component({
   selector: 'app-login',
@@ -6,12 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  user:any = {};
-  constructor() { }
+  user: any = {};
+  constructor(private ipc: IpcService) { }
 
   ngOnInit() {
   }
   checkUser() {
-    
+    this.ipc.checkUser(this.user);
   }
 }
